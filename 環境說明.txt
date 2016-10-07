@@ -1,5 +1,6 @@
-­ì©l°õ¦æÀô¹Ò:
+åŸå§‹åŸ·è¡Œç’°å¢ƒ:
 1. Tomcat 7
 2. jdk1.6/jre6
-3. webÀÉ°õ¦æ¥Ø¿ı¬°WebRoot(¹w³]WebContent)
-4. classÀÉ¦s©ñ¥Ø¿ıWebRoot/WEB-INF/classes(¹w³]build/classes)
+3. webæª”åŸ·è¡Œç›®éŒ„ç‚ºWebRoot(é è¨­WebContent)
+4. classæª”å­˜æ”¾ç›®éŒ„WebRoot/WEB-INF/classes(é è¨­build/classes)
+5. åŸ·è¡Œhttp://localhost:8080/JSP_EnglishGame/index.do?action=goHeadIndexé€²å…¥é¦–é 
