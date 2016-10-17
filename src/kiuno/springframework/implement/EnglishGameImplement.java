@@ -9,6 +9,14 @@ public class EnglishGameImplement {
 	}
 	
 	public void setGameData(){
-		StaticVariable.game.process();
+		StaticVariable.game.iniGame(); //初始化遊戲資料
+	}
+	
+	public void runGame(){
+		StaticVariable.game.runGame(); //執行遊戲
+	}
+	
+	public void saveRecordToFile(){
+		StaticVariable.game.saveRecord(); //是否將遊戲單字紀錄檔案
 	}
 }

@@ -7,6 +7,7 @@ public abstract class GameModel{
 	
 	String[][][] wordArr = StaticVariable.wordArr; //原本的陣列名稱太常用另外一個變數名稱來執行
 	String u_word,HisWord;	//u_word記錄玩家輸入單字，HisWord紀錄前一個單字
+	String msg;	//將訊息傳至前端
 	int flag;	//flag 0表示目前是電腦，1表示目前是玩家
 	boolean hasExit,hasRecord; //指令確認
 	boolean firstInput; //是否第一次輸入
@@ -17,13 +18,7 @@ public abstract class GameModel{
     	set = new Setting();
     }
     
-    public void process(){
-    	iniGame();
-    	runGame();
-    	set.SaveWordToFile(hasRecord);
-    }
-    
-    void iniGame(){ //初始化資料
+    public void iniGame(){ //初始化資料
     	firstInput=true; //第一次輸入單字
     	HisWord=""; //清空歷史單字
     	flag=1; //玩家1先開始
@@ -47,12 +42,16 @@ public abstract class GameModel{
 		}
     }
     
-    void runGame(){
+    public void runGame(){
     	try{
     		StartGame();
     	}catch(Exception e){
-    		System.out.println("執行出現問題runGame");
+    		msg = "執行出現問題runGame";
     	}
+    }
+    
+    public void saveRecord(){
+    	set.SaveWordToFile(hasRecord);
     }
     //******************************************************//
     
