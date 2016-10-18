@@ -4,28 +4,30 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
-class Setting {
-	String[][][] wordArr = StaticVariable.wordArr; //原本的陣列名稱太常用另外一個變數名稱來執行
-	
+import javax.servlet.http.*;
+
+class Setting extends HttpServlet {
 	//********************將設定檔的內容讀進來********************//
     void setConfig(){
-		String line;
+    	String line;
 		String valueArr[];
 		try{
 			FileReader fr;
 			BufferedReader br;
-			fr = new FileReader("./confing/charsettings.properties");
-    		br = new BufferedReader(fr);
+			fr = new FileReader(StaticVariable.realPath+"//confing//charsettings.properties");
+			br = new BufferedReader(fr);
     		while((line=br.readLine()) != null){
     			valueArr=line.split("=");
     			judge(valueArr[0], valueArr[1]);
     		}
     		br.close();
     		fr.close();
+    		System.out.println("讀檔成功!!");
 		}catch(Exception e){
+			e.printStackTrace();
 			System.out.println("讀檔出現錯誤!!");
 		}
     }
@@ -51,11 +53,11 @@ class Setting {
     	Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
-		wordArr = new String[26][][];
+		StaticVariable.wordArr = new String[26][][];
 		
 		try {
 			Class.forName("org.sqlite.JDBC");
-			conn = DriverManager.getConnection("jdbc:sqlite:EnglishWord.db");
+			conn = DriverManager.getConnection("jdbc:sqlite:"+StaticVariable.realPath+"//EnglishWord.db");
 			conn.setAutoCommit(false);
 
 			stmt = conn.createStatement();
@@ -64,7 +66,7 @@ class Setting {
 				rs = stmt.executeQuery("SELECT COUNT(*) AS COUNT FROM WORD WHERE WORD LIKE '"+c+"%';"); //取得各英文字首底下的單字數量
 				int count = 0;
 				while (rs.next()) count = rs.getInt("count");
-				wordArr[i] = new String[count][4]; //個別宣告26個字母的單字多寡
+				StaticVariable.wordArr[i] = new String[count][4]; //個別宣告26個字母的單字多寡
 			}
 		} catch (Exception e) {
 			System.err.println("取得「英文單字數量」失敗");
@@ -85,7 +87,7 @@ class Setting {
 		
 		try {
 			Class.forName("org.sqlite.JDBC");
-			conn = DriverManager.getConnection("jdbc:sqlite:EnglishWord.db");
+			conn = DriverManager.getConnection("jdbc:sqlite:"+StaticVariable.realPath+"//EnglishWord.db");
 			conn.setAutoCommit(false);
 
 			stmt = conn.createStatement();
@@ -113,10 +115,10 @@ class Setting {
 		}
     }
     void SaveRowToArray(String word,String explain,int wordnum,int count){
-    	wordArr[wordnum][count][0] = word;		//存入字母
-    	wordArr[wordnum][count][1] = explain;	//存入中文註解
-    	wordArr[wordnum][count][2] = "n";		//存入n代表還沒被使用過
-    	wordArr[wordnum][count][3] = "n";		//存入n代表非任何人輸入，0表示電腦，1表示玩家1
+    	StaticVariable.wordArr[wordnum][count][0] = word;		//存入字母
+    	StaticVariable.wordArr[wordnum][count][1] = explain;	//存入中文註解
+    	StaticVariable.wordArr[wordnum][count][2] = "n";		//存入n代表還沒被使用過
+    	StaticVariable.wordArr[wordnum][count][3] = "n";		//存入n代表非任何人輸入，0表示電腦，1表示玩家1
     }
     //******************************************************//
     
@@ -129,10 +131,10 @@ class Setting {
     		String name = "HistoryWord_" + formatter.format(date) + ".txt"; //以日期當作檔名
     		try{
             	BufferedWriter bw = new BufferedWriter(new FileWriter("./RecordWord/HistoryWord/" + name));
-            	for(int i=0; i<wordArr.length; i++){		
-            		for(int j=0; j<wordArr[i].length; j++){
-            			if(wordArr[i][j][2].equals("y")){
-            				bw.write(wordArr[i][j][0] + " = " + wordArr[i][j][1]);
+            	for(int i=0; i<StaticVariable.wordArr.length; i++){		
+            		for(int j=0; j<StaticVariable.wordArr[i].length; j++){
+            			if(StaticVariable.wordArr[i][j][2].equals("y")){
+            				bw.write(StaticVariable.wordArr[i][j][0] + " = " + StaticVariable.wordArr[i][j][1]);
             				bw.newLine();
             			}
             		}
@@ -147,10 +149,10 @@ class Setting {
     		String name = "ComputerWord_" + formatter.format(date) + ".txt"; //以日期當作檔名
     		try{
             	BufferedWriter bw = new BufferedWriter(new FileWriter("./RecordWord/ComputerWord/" + name));
-            	for(int i=0; i<wordArr.length; i++){		
-            		for(int j=0; j<wordArr[i].length; j++){
-            			if(wordArr[i][j][3].equals("0")){
-            				bw.write(wordArr[i][j][0] + " = " + wordArr[i][j][1]);
+            	for(int i=0; i<StaticVariable.wordArr.length; i++){		
+            		for(int j=0; j<StaticVariable.wordArr[i].length; j++){
+            			if(StaticVariable.wordArr[i][j][3].equals("0")){
+            				bw.write(StaticVariable.wordArr[i][j][0] + " = " + StaticVariable.wordArr[i][j][1]);
             				bw.newLine();
             			}
             		}

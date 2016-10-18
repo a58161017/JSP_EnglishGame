@@ -5,7 +5,6 @@ public abstract class GameModel{
 	Setting set;
 	Scanner keyboard = new Scanner(System.in);
 	
-	String[][][] wordArr = StaticVariable.wordArr; //原本的陣列名稱太常用另外一個變數名稱來執行
 	String u_word,HisWord;	//u_word記錄玩家輸入單字，HisWord紀錄前一個單字
 	String msg;	//將訊息傳至前端
 	int flag;	//flag 0表示目前是電腦，1表示目前是玩家
@@ -33,11 +32,11 @@ public abstract class GameModel{
     	}catch(Exception e){
     		System.out.println("設定出現問題iniGame");
     	}
-    	
+    	System.out.println("StaticVariable.wordArr[0][0][0]="+StaticVariable.wordArr[0][0][0]);
     	for(int i=0; i<=25; i++){
-    		for(int j=0; j<wordArr[i].length; j++){
-    			wordArr[i][j][2]="n";
-    			wordArr[i][j][3]="n";
+    		for(int j=0; j<StaticVariable.wordArr[i].length; j++){
+    			StaticVariable.wordArr[i][j][2]="n";
+    			StaticVariable.wordArr[i][j][3]="n";
     		}
 		}
     }
@@ -97,15 +96,15 @@ public abstract class GameModel{
    		String headword;
    		
    		if(firstInput && u_word.equals("\\c")){
-   			alphindex = (int)(Math.random()*wordArr.length);
+   			alphindex = (int)(Math.random()*StaticVariable.wordArr.length);
    		}else{
    			if(s1.equals("noinput"))
    				headword = GetLastChar(HisWord);	//取得上一個單字的字尾，當作這次的字首
    			else
    				headword = GetFirstChar(u_word);	//取得輸入單字的字首，當作這次的字首
    		
-   			for(int i=0; i<wordArr.length; i++){	//執行26個字母
-   				if(wordArr[i][0][0].substring(0,1).toLowerCase().equals(headword)){	//判斷目前單字字首為:a~z其中一個
+   			for(int i=0; i<StaticVariable.wordArr.length; i++){	//執行26個字母
+   				if(StaticVariable.wordArr[i][0][0].substring(0,1).toLowerCase().equals(headword)){	//判斷目前單字字首為:a~z其中一個
    					alphindex = i;	//紀錄字首的字母索引
    					break;
    				}
@@ -113,17 +112,17 @@ public abstract class GameModel{
    		}
    		
    		if(s1.equals("noinput")){
-   			int index = (int)(Math.random()*wordArr[alphindex].length);	//隨機產生單字的索引
-			while(!(wordArr[alphindex][index][2].equals("n"))){	//重複執行直到單字沒使用過
-				index = (int)(Math.random()*wordArr[alphindex].length);	//隨機產生單字的索引
+   			int index = (int)(Math.random()*StaticVariable.wordArr[alphindex].length);	//隨機產生單字的索引
+			while(!(StaticVariable.wordArr[alphindex][index][2].equals("n"))){	//重複執行直到單字沒使用過
+				index = (int)(Math.random()*StaticVariable.wordArr[alphindex].length);	//隨機產生單字的索引
 			}
 			alphword = index;	//將索引存入
-			u_word = wordArr[alphindex][alphword][0];	//將找到單字存入
+			u_word = StaticVariable.wordArr[alphindex][alphword][0];	//將找到單字存入
 			findword = true;	//找到單字
    		}else{
-   			for(int i=0; i<wordArr[alphindex].length; i++){
-   				if(wordArr[alphindex][i][0].toLowerCase().equals(s1)){
-   					if(wordArr[alphindex][i][2].equals("n")){
+   			for(int i=0; i<StaticVariable.wordArr[alphindex].length; i++){
+   				if(StaticVariable.wordArr[alphindex][i][0].toLowerCase().equals(s1)){
+   					if(StaticVariable.wordArr[alphindex][i][2].equals("n")){
    						alphword = i;
    	   					findword = true;
    	   					break;
@@ -143,15 +142,15 @@ public abstract class GameModel{
     	if(word.length() >= 5){
     		int alphindex=104;
     		String headword = GetFirstChar(word);
-    		for(int i=0; i<wordArr.length; i++){	//執行26個字母
-    			if(wordArr[i][0][0].substring(0,1).toLowerCase().equals(headword)){	//判斷目前單字字首為:a~z其中一個
+    		for(int i=0; i<StaticVariable.wordArr.length; i++){	//執行26個字母
+    			if(StaticVariable.wordArr[i][0][0].substring(0,1).toLowerCase().equals(headword)){	//判斷目前單字字首為:a~z其中一個
     				alphindex = i;	//紀錄字首的字母索引
     				break;
     			}
     		}
     		if(alphindex != 104){
     			System.out.println("搜尋結果如下:");
-    			for(int i=0; i<wordArr[alphindex].length; i++){
+    			for(int i=0; i<StaticVariable.wordArr[alphindex].length; i++){
     				CompareWord(word, alphindex, i);
     			}
     			if(!findSimilar)
@@ -168,7 +167,7 @@ public abstract class GameModel{
     	int count = 0; //記錄match到的字元有幾個
     	String wordTmp = word.substring(1); //最後比對match次數用的
     	word = word.substring(1); //先去掉字首，因為已經確定字首不需要比
-    	String word2 = wordArr[x][y][0].substring(1); //要被比對的單字，並且去掉字首
+    	String word2 = StaticVariable.wordArr[x][y][0].substring(1); //要被比對的單字，並且去掉字首
     	if((word2.length() == word.length()) || (word2.length() == word.length()+1) || (word2.length() == word.length()-1)){
     		char charArr[] = word2.toCharArray();
     		while(word.length() > 0){
@@ -182,7 +181,7 @@ public abstract class GameModel{
     			word = word.substring(1);
     		}
     		if((count == wordTmp.length()) || (count == wordTmp.length()-1)){
-    			System.out.println(wordArr[x][y][0]);
+    			System.out.println(StaticVariable.wordArr[x][y][0]);
     			findSimilar = true;
     		}
     	}

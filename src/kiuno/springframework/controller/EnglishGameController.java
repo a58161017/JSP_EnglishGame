@@ -23,6 +23,7 @@ public class EnglishGameController extends MultiActionController {
 		EnglishGameImplement gameImpl = new EnglishGameImplement();
 		gameImpl.setGameMode(gameMode); //設定遊戲模式
 		gameImpl.setGameData(); //設定遊戲參數和資料
+		System.out.println("資料設定完成");
 		
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("param", param);
@@ -52,6 +53,9 @@ public class EnglishGameController extends MultiActionController {
 		String computer = "";
 		if("com".equals(leader)) computer = tp.checkNull(req.getParameter("computer"),"");
 		else player = tp.checkNull(req.getParameter("player"+leader),"");
+		
+		EnglishGameImplement gameImpl = new EnglishGameImplement();
+		gameImpl.checkAlph(); //檢查使用者輸入的字串
 		
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("gameMode", gameMode);

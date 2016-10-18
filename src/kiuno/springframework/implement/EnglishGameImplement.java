@@ -12,7 +12,7 @@ public class EnglishGameImplement {
 		StaticVariable.game.iniGame(); //初始化遊戲資料
 	}
 	
-	public void runGame(){
+	public void checkAlph(){
 		StaticVariable.game.runGame(); //執行遊戲
 	}
 	

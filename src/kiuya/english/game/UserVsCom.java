@@ -66,15 +66,15 @@ public class UserVsCom extends GameModel {
 	void CheckFindWord(int alphword, int alphindex, boolean errMsg){
 		if(findword){	//判斷是否找到單字
    			HisWord = u_word;	//將目前單字存入歷史單字
-   			wordArr[alphindex][alphword][2] = "y";	//設定此單字被使用過
+   			StaticVariable.wordArr[alphindex][alphword][2] = "y";	//設定此單字被使用過
    			if(flag==0){
-   				wordArr[alphindex][alphword][3] = "0";  //設定此單字為玩家1所用
+   				StaticVariable.wordArr[alphindex][alphword][3] = "0";  //設定此單字為玩家1所用
    				flag=1;  //輪到玩家1
    			}else{
-   				wordArr[alphindex][alphword][3] = "1";  //設定此單字為電腦所用
+   				StaticVariable.wordArr[alphindex][alphword][3] = "1";  //設定此單字為電腦所用
    				flag=0;  //輪到電腦
    			}
-   			System.out.println(wordArr[alphindex][alphword][0] + "(字尾：" + GetLastChar(u_word) +") " + wordArr[alphindex][alphword][1]);  //印出單字
+   			System.out.println(StaticVariable.wordArr[alphindex][alphword][0] + "(字尾：" + GetLastChar(u_word) +") " + StaticVariable.wordArr[alphindex][alphword][1]);  //印出單字
    		}else if(!errMsg){
    			System.out.println("查不到這個單字!!");
    		}
