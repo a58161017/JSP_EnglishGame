@@ -13,7 +13,7 @@
 </style>
 <script>
 	function init(){
-		introduce();
+		showMsg();
 		lockOtherPlayer();
 	}
 	
@@ -43,12 +43,14 @@
 		}
 	}
 	
-	function introduce(){
+	function showMsg(){
 		var isFirstEntry = form.isFirstEntry.value;
 		if(isFirstEntry == 'Y'){
 			form.gameMsg.value = '歡迎進入到「英文單字接龍」小遊戲';
 			form.gameMsg.value += '\n本遊戲是由「kiuno」所製作 Ver1.0';
 			form.gameMsg.value += '\n';
+		}else{
+			form.gameMsg.value = '${gameInfo.msg}';
 		}
 	}
 </script>
@@ -66,7 +68,7 @@
 		<tr class="tr-1"><td colspan="2" align="center">單人模式</td></tr>
 		<c:forEach var="i" begin="1" end="${gameInfo.peopleNum}">
   			<tr class="tr-2"><td colspan="2">
-  				 玩家${i}：<input type="text" id="player${i}" size="15">
+  				 玩家${i}：<input type="text" id="player${i}" name="player${i}" size="15">
   				 ${i==1?'&nbsp<input type="submit" value="送出">':''}
   			</td></tr>
 		</c:forEach>

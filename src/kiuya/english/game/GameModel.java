@@ -7,7 +7,6 @@ public abstract class GameModel{
 	
 	String u_word,HisWord;	//u_word記錄玩家輸入單字，HisWord紀錄前一個單字
 	String msg;	//將訊息傳至前端
-	int flag;	//flag 0表示目前是電腦，1表示目前是玩家
 	boolean hasExit,hasRecord; //指令確認
 	boolean firstInput; //是否第一次輸入
 	boolean hasCmd;	//判斷字母是否存在
@@ -20,7 +19,6 @@ public abstract class GameModel{
     public void iniGame(){ //初始化資料
     	firstInput=true; //第一次輸入單字
     	HisWord=""; //清空歷史單字
-    	flag=1; //玩家1先開始
     	hasCmd = false;	//判斷字母是否存在
     	hasExit=false;
     	hasRecord=false;
@@ -32,7 +30,6 @@ public abstract class GameModel{
     	}catch(Exception e){
     		System.out.println("設定出現問題iniGame");
     	}
-    	System.out.println("StaticVariable.wordArr[0][0][0]="+StaticVariable.wordArr[0][0][0]);
     	for(int i=0; i<=25; i++){
     		for(int j=0; j<StaticVariable.wordArr[i].length; j++){
     			StaticVariable.wordArr[i][j][2]="n";
@@ -63,7 +60,7 @@ public abstract class GameModel{
     
     //********************兩個子類別的共同方法********************//
     void userPlay(){ //玩家開始行動
-   		u_word = keyboard.next();
+   		u_word = StaticVariable.word;
    		hasCmd = CheckCmd(u_word);	//判斷字母是否為指令
    		if(!hasCmd){
    			if(firstInput){
@@ -83,7 +80,7 @@ public abstract class GameModel{
 			if((GetFirstChar(u_word)).equals(GetLastChar(HisWord))){ //看是否目前單字字首和上一個單字字尾是否相同
 				return true;
 			}else{
-				System.out.println("您輸入的單字開頭有誤!!");
+				StaticVariable.msg = "您輸入的單字開頭有誤!!";
 				return false;
 			}
 		}
@@ -128,7 +125,7 @@ public abstract class GameModel{
    	   					break;
    					}else{
    						errMsg = true;
-   						System.out.println("此單字已被使用過!!");
+   						StaticVariable.msg = "此單字已被使用過!!";
    					}
    				}
    			}	
@@ -149,17 +146,17 @@ public abstract class GameModel{
     			}
     		}
     		if(alphindex != 104){
-    			System.out.println("搜尋結果如下:");
+    			StaticVariable.msg = "搜尋結果如下:\n";
     			for(int i=0; i<StaticVariable.wordArr[alphindex].length; i++){
     				CompareWord(word, alphindex, i);
     			}
     			if(!findSimilar)
-    				System.out.println("很抱歉沒有類似的單字!!");
+    				StaticVariable.msg += "很抱歉沒有類似的單字!!";
     		}else{
-    			System.out.println("輸入單字的字首有問題!!");
+    			StaticVariable.msg = "輸入單字的字首有問題!!";
     		}
     	}else{
-    		System.out.println("你輸入的印象單字少於5個字!!");
+    		StaticVariable.msg = "你輸入的印象單字少於5個字!!";
     	}
     }
     
@@ -181,7 +178,7 @@ public abstract class GameModel{
     			word = word.substring(1);
     		}
     		if((count == wordTmp.length()) || (count == wordTmp.length()-1)){
-    			System.out.println(StaticVariable.wordArr[x][y][0]);
+    			StaticVariable.msg += StaticVariable.wordArr[x][y][0];
     			findSimilar = true;
     		}
     	}

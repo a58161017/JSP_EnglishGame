@@ -10,6 +10,13 @@ import java.util.Date;
 import javax.servlet.http.*;
 
 class Setting extends HttpServlet {
+	Setting(){
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 	//********************將設定檔的內容讀進來********************//
     void setConfig(){
     	String line;
@@ -56,7 +63,7 @@ class Setting extends HttpServlet {
 		StaticVariable.wordArr = new String[26][][];
 		
 		try {
-			Class.forName("org.sqlite.JDBC");
+			
 			conn = DriverManager.getConnection("jdbc:sqlite:"+StaticVariable.realPath+"//EnglishWord.db");
 			conn.setAutoCommit(false);
 
@@ -86,7 +93,6 @@ class Setting extends HttpServlet {
 		ResultSet rs = null;
 		
 		try {
-			Class.forName("org.sqlite.JDBC");
 			conn = DriverManager.getConnection("jdbc:sqlite:"+StaticVariable.realPath+"//EnglishWord.db");
 			conn.setAutoCommit(false);
 

@@ -15,7 +15,7 @@ public class UserVsUser extends GameModel {
 		setUser();
 		while(!hasExit){
 			findword = false;	//是否找到單字的變數
-			System.out.print("請玩家" + flag + "輸入一個英文單字或指令：");
+			System.out.print("請玩家" + StaticVariable.leader + "輸入一個英文單字或指令：");
 			userPlay();
 			if(findword)
 				nextUser(); //呼叫下一位玩家
@@ -69,31 +69,31 @@ public class UserVsUser extends GameModel {
 	void nextUser(){
 		boolean findPeople = false;
 		while(!findPeople){
-			if(flag == people)
-				flag = 0;
-			flag++;
-			if(userSurrender[flag-1] != 1)
+			if(StaticVariable.leader == people)
+				StaticVariable.leader = 0;
+			StaticVariable.leader++;
+			if(userSurrender[StaticVariable.leader-1] != 1)
 				findPeople = true;
 		}
 	}
 
 	boolean CheckCmd(String word){
 		if(word.equals("\\c")){
-			if(userHelp[flag-1] > 0){
+			if(userHelp[StaticVariable.leader-1] > 0){
 				if(CheckHead("noinput") || firstInput)
 					CheckWord("noinput");
 				if(findword){
-					userHelp[flag-1]--; //扣掉一次救援次數
+					userHelp[StaticVariable.leader-1]--; //扣掉一次救援次數
 					if(firstInput)
 						firstInput=false;
 				}
 			}else{
-				System.out.println("玩家" + flag + "的救援次數已用完!!");
+				System.out.println("玩家" + StaticVariable.leader + "的救援次數已用完!!");
 			}
 			return true;
 		}else if(word.equals("\\s")){
-			System.out.println("玩家" + flag + "已經認輸");
-			userSurrender[flag-1] = 1;
+			System.out.println("玩家" + StaticVariable.leader + "已經認輸");
+			userSurrender[StaticVariable.leader-1] = 1;
 			CheckWinner();
 			return true;
 		}else if(word.equals("\\e")){
@@ -101,12 +101,12 @@ public class UserVsUser extends GameModel {
 			hasExit = true;
 			return true;
 		}else if(word.equals("\\z")){
-			if(userComplementWord[flag-1] > 0){
-				System.out.print("進入到印象單字補充系統!!\n本回合剩餘可用次數" + userComplementWord[flag-1] + "次!!\n請輸入印象單字(最少5個字以上)：");
+			if(userComplementWord[StaticVariable.leader-1] > 0){
+				System.out.print("進入到印象單字補充系統!!\n本回合剩餘可用次數" + userComplementWord[StaticVariable.leader-1] + "次!!\n請輸入印象單字(最少5個字以上)：");
 				CheckComplementWord();
-				userComplementWord[flag-1]--;
+				userComplementWord[StaticVariable.leader-1]--;
 			}else{
-				System.out.println("玩家" + flag + "的印象單字補充次數已用完!!");
+				System.out.println("玩家" + StaticVariable.leader + "的印象單字補充次數已用完!!");
 			}
 			return true;
 		}else if(word.substring(0,1).equals("\\")){
@@ -121,7 +121,7 @@ public class UserVsUser extends GameModel {
    		if(findword){	//判斷是否找到單字
    			HisWord = u_word;	//將目前單字存入歷史單字
    			StaticVariable.wordArr[alphindex][alphword][2] = "y";	//設定此單字被使用過
-   			StaticVariable.wordArr[alphindex][alphword][3] = String.valueOf(flag);  //設定此單字為玩家1所用
+   			StaticVariable.wordArr[alphindex][alphword][3] = String.valueOf(StaticVariable.leader);  //設定此單字為玩家1所用
    			System.out.println(StaticVariable.wordArr[alphindex][alphword][0] + "(字尾：" + GetLastChar(u_word) +") " + StaticVariable.wordArr[alphindex][alphword][1]); //印出單字
    		}else if(!errMsg){
    			System.out.println("查不到這個單字!!");
