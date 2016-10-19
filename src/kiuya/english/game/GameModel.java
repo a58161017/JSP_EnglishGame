@@ -6,7 +6,6 @@ public abstract class GameModel{
 	Scanner keyboard = new Scanner(System.in);
 	
 	String u_word,HisWord;	//u_word記錄玩家輸入單字，HisWord紀錄前一個單字
-	String msg;	//將訊息傳至前端
 	boolean hasExit,hasRecord; //指令確認
 	boolean firstInput; //是否第一次輸入
 	boolean hasCmd;	//判斷字母是否存在
@@ -18,17 +17,18 @@ public abstract class GameModel{
     
     public void iniGame(){ //初始化資料
     	firstInput=true; //第一次輸入單字
-    	HisWord=""; //清空歷史單字
     	hasCmd = false;	//判斷字母是否存在
     	hasExit=false;
     	hasRecord=false;
+    	for(int i=0; i<StaticVariable.hisWord.length; i++)
+    		StaticVariable.hisWord[i] = "";
     	
     	try{
     		set.setConfig(); //呼叫Setting的Method匯入外部設定檔
     		set.setWordArray(); //呼叫Setting的Method設定陣列大小
     		set.inputAlph(); //呼叫Setting的Method設定儲存單字至陣列中
     	}catch(Exception e){
-    		System.out.println("設定出現問題iniGame");
+    		StaticVariable.msg = "設定出現問題iniGame";
     	}
     	for(int i=0; i<=25; i++){
     		for(int j=0; j<StaticVariable.wordArr[i].length; j++){
@@ -42,7 +42,7 @@ public abstract class GameModel{
     	try{
     		StartGame();
     	}catch(Exception e){
-    		msg = "執行出現問題runGame";
+    		StaticVariable.msg = "執行出現問題runGame";
     	}
     }
     
@@ -80,7 +80,7 @@ public abstract class GameModel{
 			if((GetFirstChar(u_word)).equals(GetLastChar(HisWord))){ //看是否目前單字字首和上一個單字字尾是否相同
 				return true;
 			}else{
-				StaticVariable.msg = "您輸入的單字開頭有誤!!";
+				StaticVariable.msg += "輸入的單字開頭有誤!!";
 				return false;
 			}
 		}
@@ -125,7 +125,7 @@ public abstract class GameModel{
    	   					break;
    					}else{
    						errMsg = true;
-   						StaticVariable.msg = "此單字已被使用過!!";
+   						StaticVariable.msg += "此單字已被使用過!!";
    					}
    				}
    			}	
@@ -146,17 +146,17 @@ public abstract class GameModel{
     			}
     		}
     		if(alphindex != 104){
-    			StaticVariable.msg = "搜尋結果如下:\n";
+    			StaticVariable.msg += "搜尋結果如下:\\n";
     			for(int i=0; i<StaticVariable.wordArr[alphindex].length; i++){
     				CompareWord(word, alphindex, i);
     			}
     			if(!findSimilar)
     				StaticVariable.msg += "很抱歉沒有類似的單字!!";
     		}else{
-    			StaticVariable.msg = "輸入單字的字首有問題!!";
+    			StaticVariable.msg += "輸入單字的字首有問題!!";
     		}
     	}else{
-    		StaticVariable.msg = "你輸入的印象單字少於5個字!!";
+    		StaticVariable.msg += "輸入的印象單字少於5個字!!";
     	}
     }
     

@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 import kiuno.springframework.implement.EnglishGameImplement;
 import kiuno.utility.TextProcessor;
+import kiuya.english.game.StaticVariable;
 
 public class EnglishGameController extends MultiActionController {
 	private String frameLoaderPage,gameScreenPage;
@@ -23,7 +24,9 @@ public class EnglishGameController extends MultiActionController {
 		
 		gameImpl = new EnglishGameImplement();
 		gameImpl.setGameMode(gameMode); //設定遊戲模式
+		gameImpl.setPeopleNum(peopleNum); //設定遊戲人數
 		gameImpl.setGameData(); //設定遊戲參數和資料
+		
 		System.out.println("資料設定完成");
 		
 		Map<String, String> map = new HashMap<String, String>();
@@ -49,24 +52,45 @@ public class EnglishGameController extends MultiActionController {
 	public ModelAndView checkAlph(HttpServletRequest req, HttpServletResponse res) {
 		String gameMode = tp.checkNull(req.getParameter("gameMode"),"1");
 		int peopleNum = Integer.parseInt(tp.checkNull(req.getParameter("peopleNum"),"1"));
-		String leader = tp.checkNull(req.getParameter("leader"),"1"); //if '1'=>player1, '0'=>computer
+		String leader = tp.checkNull(req.getParameter("leader"),"1"); //if '0'=>computer, '1'=>player1
 		String word = "";
-		if("0".equals(leader)) word = tp.checkNull(req.getParameter("computer"),"");
-		else word = tp.checkNull(req.getParameter("player"+leader),"");
+		if("0".equals(leader)){ 
+			word = tp.checkNull(req.getParameter("computer"),"");
+			StaticVariable.msg = "電腦:";
+		}else{ 
+			word = tp.checkNull(req.getParameter("player"+leader),"");
+			StaticVariable.msg = "玩家"+leader+":";
+		}
+		System.out.println("--------------------執行前--------------------");
+		System.out.println("gameMode = " + gameMode);
+		System.out.println("peopleNum = " + peopleNum);
 		System.out.println("leader = " + leader);
 		System.out.println("word = " + word);
+		System.out.println("-------------------------------------------");
+		
+		StaticVariable.hisWord[Integer.parseInt(leader)] = word;
 		
 		gameImpl.setLeader(leader);
 		gameImpl.setWord(word);
 		gameImpl.checkAlph(); //檢查使用者輸入的字串
 		
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("gameMode", gameMode);
 		map.put("peopleNum", String.valueOf(peopleNum));
-		map.put("leader", leader);
+		map.put("leader", gameImpl.getLeader());
 		map.put("msg", gameImpl.getMessage());
+		map.put("hisWord", gameImpl.getHisWord());
+		System.out.println("--------------------執行後--------------------");
+		System.out.println("word = " + StaticVariable.word);
+		System.out.println("leader = " + StaticVariable.leader);
+		System.out.println("peopleNum = " + StaticVariable.peopleNum);
+		System.out.println("maxHelp = " + StaticVariable.maxHelp);
+		System.out.println("historyWord = " + StaticVariable.historyWord);
+		System.out.println("complementWord = " + StaticVariable.complementWord);
+		System.out.println("hisWord[0] = " + StaticVariable.hisWord[0]);
+		System.out.println("hisWord[1] = " + StaticVariable.hisWord[1]);
 		System.out.println("msg = " + gameImpl.getMessage());
-		System.out.println("單字檢查完成");
+		System.out.println("-------------------------------------------");
 		return new ModelAndView(this.getGameScreenPage(),"gameInfo",map);
 	}
 	

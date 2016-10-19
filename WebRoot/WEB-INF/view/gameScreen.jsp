@@ -12,6 +12,11 @@
 .tr-3 {background-color:#993300;color:#FFFFFF;font-size:12pt;word-spacing:-3px;letter-spacing:0px;-letter-spacing:-1px;}
 </style>
 <script>
+	var myTimer1;
+	var myTimer2;
+	var timer1 = 5000; //電腦思考時間
+	var timer2 = 500; //顯示電腦正在思考的時間
+	
 	function init(){
 		showMsg();
 		lockOtherPlayer();
@@ -23,21 +28,25 @@
 		for(var i=1; i<=peopleNum; i++){
 			if(i.toString() != leader) document.getElementById('player'+i).disabled = true;
 		}
+		if(leader == '0'){
+			myTimer1 = setTimeout("computerAction()",timer1);
+			myTimer2 = setTimeout("computerThink()",timer2);
+		}
 	}
 	
 	function validate(){
 		var leader = form.leader.value;
 		var player = document.getElementById('player'+leader);
 		if(player.value != ''){
-			var regx = /^[a-zA-Z]+$/;
+			var regx = /^[a-zA-Z\\]+$/;
 		    if (!regx.test(player.value)) {
-		    	alert('只能輸入英文字');
+		    	alert('只能輸入英文字或指令符號');
 		    	player.value = '';
 		    	player.focus();
 		    	return false;
 		    }
 		}else{
-			alert('請輸入英文單字');
+			alert('請輸入英文單字或指令符號');
 			player.focus();
 			return false;
 		}
@@ -46,12 +55,32 @@
 	function showMsg(){
 		var isFirstEntry = form.isFirstEntry.value;
 		if(isFirstEntry == 'Y'){
-			form.gameMsg.value = '歡迎進入到「英文單字接龍」小遊戲';
+			form.gameMsg.value = '歡迎進入到網頁版「英文單字接龍」小遊戲';
 			form.gameMsg.value += '\n本遊戲是由「kiuno」所製作 Ver1.0';
 			form.gameMsg.value += '\n';
 		}else{
-			form.gameMsg.value = '${gameInfo.msg}';
+			var gameMode = form.gameMode.value;
+			var leader = form.leader.value;
+			var notifyNextPerson = '';
+			if(gameMode == '1'){
+				if(leader == '0') notifyNextPerson = '這回合輪到電腦~~\n電腦正在思考.'
+				else notifyNextPerson = '這回合輪到玩家1'
+			}else{
+				notifyNextPerson = '這回合輪到玩家'+leader;
+			}
+			form.gameMsg.value = '${gameInfo.msg}\n'+notifyNextPerson;
 		}
+	}
+	
+	function computerAction(){
+		clearTimeout(myTimer1);
+		clearTimeout(myTimer2);
+		form.submit();
+	}
+	
+	function computerThink(){
+		form.gameMsg.value = form.gameMsg.value + '.';
+		myTimer2 = setTimeout("computerThink()",timer2);
 	}
 </script>
 </head>
@@ -68,12 +97,12 @@
 		<tr class="tr-1"><td colspan="2" align="center">單人模式</td></tr>
 		<c:forEach var="i" begin="1" end="${gameInfo.peopleNum}">
   			<tr class="tr-2"><td colspan="2">
-  				 玩家${i}：<input type="text" id="player${i}" name="player${i}" size="15">
+  				 玩家${i}：<input type="text" id="player${i}" name="player${i}" value="${gameInfo.hisWord[i]}" size="15">
   				 ${i==1?'&nbsp<input type="submit" value="送出">':''}
   			</td></tr>
 		</c:forEach>
 		<c:if test="${gameInfo.gameMode=='1'}">
-   			<tr class="tr-2"><td colspan="2">電腦1：${gameInfo.computer}</td></tr>
+   			<tr class="tr-2"><td colspan="2">電腦1：${gameInfo.hisWord[0]}</td></tr>
 		</c:if>
 		<tr class="tr-3">
 			<td>遊戲訊息:</td>
@@ -85,10 +114,8 @@
 				${menuInfo.gameMode=='1'?'\\r 開啟/關閉 記錄電腦所使用單字<br>':''}
 				\c 得到隨機單字的救援<br>
 				\e 離開這場對局<br>
-				\h 叫出指令清單<br>
 				\s 該回合玩家認輸投降<br>
 				\z 進入到印象單字補充系統<br>
-				\c 得到隨機單字的救援<br>
 			</td>
 		</tr>
 	</table>

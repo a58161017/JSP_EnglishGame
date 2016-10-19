@@ -36,4 +36,13 @@ public class EnglishGameImplement {
 	public String getLeader(){
 		return String.valueOf(StaticVariable.leader); //回傳下一回合操控者
 	}
+	
+	public void setPeopleNum(String peopleNum){
+		StaticVariable.peopleNum = Integer.parseInt(peopleNum); //設定遊戲人數
+		StaticVariable.hisWord = new String[StaticVariable.peopleNum+1]; //index=0 給電腦使用
+	}
+	
+	public String[] getHisWord(){
+		return StaticVariable.hisWord;
+	}
 }
