@@ -143,7 +143,7 @@
 		<tr class="tr-3">
 			<td><textarea name="gameMsg" rows="12" cols="70"></textarea></td>
 			<td>
-				${menuInfo.gameMode=='1'?'\\r 開啟/關閉 記錄電腦所使用單字<br>':''}
+				${gameInfo.gameMode=='1'?'\\r 開啟/關閉 記錄電腦所使用單字<br>':''}
 				\c 得到隨機單字的救援<br>
 				\e 離開這場對局<br>
 				\s 該回合玩家認輸投降<br>
