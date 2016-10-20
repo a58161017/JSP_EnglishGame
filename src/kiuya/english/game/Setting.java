@@ -9,8 +9,8 @@ import java.util.Date;
 
 import javax.servlet.http.*;
 
-class Setting extends HttpServlet {
-	Setting(){
+public class Setting extends HttpServlet {
+	public Setting(){
 		try {
 			Class.forName("org.sqlite.JDBC");
 		} catch (ClassNotFoundException e) {
@@ -18,13 +18,13 @@ class Setting extends HttpServlet {
 		}
 	}
 	//********************將設定檔的內容讀進來********************//
-    void setConfig(){
+    public void setConfig(){
     	String line;
 		String valueArr[];
 		try{
 			FileReader fr;
 			BufferedReader br;
-			fr = new FileReader(StaticVariable.realPath+"//confing//charsettings.properties");
+			fr = new FileReader(StaticVariable.realPath+"/confing/charsettings.properties");
 			br = new BufferedReader(fr);
     		while((line=br.readLine()) != null){
     			valueArr=line.split("=");
@@ -64,7 +64,7 @@ class Setting extends HttpServlet {
 		
 		try {
 			
-			conn = DriverManager.getConnection("jdbc:sqlite:"+StaticVariable.realPath+"//EnglishWord.db");
+			conn = DriverManager.getConnection("jdbc:sqlite:"+StaticVariable.realPath+"/EnglishWord.db");
 			conn.setAutoCommit(false);
 
 			stmt = conn.createStatement();
@@ -93,7 +93,7 @@ class Setting extends HttpServlet {
 		ResultSet rs = null;
 		
 		try {
-			conn = DriverManager.getConnection("jdbc:sqlite:"+StaticVariable.realPath+"//EnglishWord.db");
+			conn = DriverManager.getConnection("jdbc:sqlite:"+StaticVariable.realPath+"/EnglishWord.db");
 			conn.setAutoCommit(false);
 
 			stmt = conn.createStatement();
@@ -136,7 +136,7 @@ class Setting extends HttpServlet {
     	if(StaticVariable.historyWord){
     		String name = "HistoryWord_" + formatter.format(date) + ".txt"; //以日期當作檔名
     		try{
-            	BufferedWriter bw = new BufferedWriter(new FileWriter("./RecordWord/HistoryWord/" + name));
+            	BufferedWriter bw = new BufferedWriter(new FileWriter(StaticVariable.realPath+"/RecordWord/HistoryWord/" + name));
             	for(int i=0; i<StaticVariable.wordArr.length; i++){		
             		for(int j=0; j<StaticVariable.wordArr[i].length; j++){
             			if(StaticVariable.wordArr[i][j][2].equals("y")){
@@ -154,7 +154,7 @@ class Setting extends HttpServlet {
     	if(hasRecord){
     		String name = "ComputerWord_" + formatter.format(date) + ".txt"; //以日期當作檔名
     		try{
-            	BufferedWriter bw = new BufferedWriter(new FileWriter("./RecordWord/ComputerWord/" + name));
+            	BufferedWriter bw = new BufferedWriter(new FileWriter(StaticVariable.realPath+"/RecordWord/ComputerWord/" + name));
             	for(int i=0; i<StaticVariable.wordArr.length; i++){		
             		for(int j=0; j<StaticVariable.wordArr[i].length; j++){
             			if(StaticVariable.wordArr[i][j][3].equals("0")){

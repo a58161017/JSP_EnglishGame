@@ -1,116 +1,74 @@
 package kiuya.english.game;
 
-import java.util.Scanner;
-
 public class UserVsUser extends GameModel {
-	int userHelp[], userSurrender[], userComplementWord[]; //userHelp記錄各玩家的救援次數，userSurrender記錄認輸的玩家(值=0表示尚未認輸，值為1表示已認輸)
-	int people; //記錄遊戲人數
-	
 	void StartGame(){
-		people = 0;
-		while(people<2 || people>StaticVariable.maxUsers){
-			System.out.print("請輸入遊戲人數2~" + StaticVariable.maxUsers + "人:");
-			people = CheckPeople();
-		}
-		setUser();
-		while(!hasExit){
-			findword = false;	//是否找到單字的變數
-			System.out.print("請玩家" + StaticVariable.leader + "輸入一個英文單字或指令：");
-			userPlay();
-			if(findword)
-				nextUser(); //呼叫下一位玩家
-			System.out.println("");
-		}
-	}
-	
-	int CheckPeople(){
-		int value;
-		try{
-			keyboard = new Scanner(System.in);
-			value = keyboard.nextInt();
-			if(value<2 || value>StaticVariable.maxUsers)
-				System.out.println("輸入的值不再範圍內!!");
-		}catch(Exception e){
-			System.out.println("輸入的值非整數型態!!");
-			return 0;
-		}
-		return value;
-	}
-	
-	void setUser(){
-		userSurrender = new int[people];
-		userHelp = new int[people];
-		userComplementWord = new int[people];
-		for(int i=0; i<userHelp.length; i++){
-			userSurrender[i] = 0;
-			userHelp[i] = StaticVariable.maxHelp;
-			userComplementWord[i] = StaticVariable.maxComplementWord;
-		}
+		findword = false;	//是否找到單字的變數
+		userPlay();
+		if(findword) nextUser(); //呼叫下一位玩家
 	}
 	
 	void CheckWinner(){
-		int userWin = 0; //記錄獲勝的玩家
+		int playerWinner = 0; //記錄獲勝的玩家
 		int count = 0; //記錄已經投降的玩家數量
 		
-		for(int i=0; i<people; i++){
-			if(userSurrender[i] == 0)
-				userWin = i+1;
+		for(int i=0; i<StaticVariable.peopleNum; i++){
+			if(StaticVariable.playersSurrender[i] == 0)
+				playerWinner = i+1;
 			else
 				count++;
 		}
-		if(count == people-1){
-			System.out.println("\n由於其他玩家已認輸，由玩家" + userWin + "獲得勝利!!");
-			hasExit = true;
+		if(count == StaticVariable.peopleNum-1){
+			StaticVariable.msg += "\\n由於其他玩家已認輸，由玩家" + playerWinner + "獲得勝利!!";
+			StaticVariable.isExit = true;
 		}
-		if(!hasExit)
-			nextUser();
+		if(!StaticVariable.isExit) nextUser();
 	}
 	
 	void nextUser(){
 		boolean findPeople = false;
 		while(!findPeople){
-			if(StaticVariable.leader == people)
+			if(StaticVariable.leader == StaticVariable.peopleNum)
 				StaticVariable.leader = 0;
 			StaticVariable.leader++;
-			if(userSurrender[StaticVariable.leader-1] != 1)
+			if(StaticVariable.playersSurrender[StaticVariable.leader-1] != 1)
 				findPeople = true;
 		}
 	}
 
 	boolean CheckCmd(String word){
 		if(word.equals("\\c")){
-			if(userHelp[StaticVariable.leader-1] > 0){
+			if(playersHelp[StaticVariable.leader-1] > 0){
 				if(CheckHead("noinput") || firstInput)
 					CheckWord("noinput");
 				if(findword){
-					userHelp[StaticVariable.leader-1]--; //扣掉一次救援次數
-					if(firstInput)
-						firstInput=false;
+					playersHelp[StaticVariable.leader-1]--; //扣掉一次救援次數
+					StaticVariable.msg += "\\n使用救援單字功能，還剩餘"+playersHelp[StaticVariable.leader-1]+"次可以使用~~";
+					if(firstInput) firstInput=false;
 				}
 			}else{
-				System.out.println("玩家" + StaticVariable.leader + "的救援次數已用完!!");
+				StaticVariable.msg += "玩家" + StaticVariable.leader + "的救援次數已用完!!";
 			}
 			return true;
 		}else if(word.equals("\\s")){
-			System.out.println("玩家" + StaticVariable.leader + "已經認輸");
-			userSurrender[StaticVariable.leader-1] = 1;
+			StaticVariable.msg += "玩家" + StaticVariable.leader + "已經認輸";
+			StaticVariable.playersSurrender[StaticVariable.leader-1] = 1;
 			CheckWinner();
 			return true;
 		}else if(word.equals("\\e")){
-			System.out.println("離開對局~~");
-			hasExit = true;
+			StaticVariable.msg += "離開對局~~";
+			StaticVariable.isExit = true;
 			return true;
 		}else if(word.equals("\\z")){
-			if(userComplementWord[StaticVariable.leader-1] > 0){
-				System.out.print("進入到印象單字補充系統!!\n本回合剩餘可用次數" + userComplementWord[StaticVariable.leader-1] + "次!!\n請輸入印象單字(最少5個字以上)：");
+			if(playersComplementWord[StaticVariable.leader-1] > 0){
+				System.out.print("進入到印象單字補充系統!!\\n本回合剩餘可用次數" + playersComplementWord[StaticVariable.leader-1] + "次!!\\n請輸入印象單字(最少5個字以上)：");
 				CheckComplementWord();
-				userComplementWord[StaticVariable.leader-1]--;
+				playersComplementWord[StaticVariable.leader-1]--;
 			}else{
-				System.out.println("玩家" + StaticVariable.leader + "的印象單字補充次數已用完!!");
+				StaticVariable.msg += "玩家" + StaticVariable.leader + "的印象單字補充次數已用完!!";
 			}
 			return true;
 		}else if(word.substring(0,1).equals("\\")){
-			System.out.println("並非正確指令，可使用\\h查看指令");
+			StaticVariable.msg += "並非正確指令!!";
 			return true;
 		}else{
 			return false;
@@ -121,10 +79,11 @@ public class UserVsUser extends GameModel {
    		if(findword){	//判斷是否找到單字
    			HisWord = u_word;	//將目前單字存入歷史單字
    			StaticVariable.wordArr[alphindex][alphword][2] = "y";	//設定此單字被使用過
-   			StaticVariable.wordArr[alphindex][alphword][3] = String.valueOf(StaticVariable.leader);  //設定此單字為玩家1所用
-   			System.out.println(StaticVariable.wordArr[alphindex][alphword][0] + "(字尾：" + GetLastChar(u_word) +") " + StaticVariable.wordArr[alphindex][alphword][1]); //印出單字
+   			StaticVariable.hisWord[StaticVariable.leader] = StaticVariable.wordArr[alphindex][alphword][0];	//在畫面上顯示電腦使用的單字
+   			StaticVariable.wordArr[alphindex][alphword][3] = String.valueOf(StaticVariable.leader);  //設定此單字為玩家x所用
+   			StaticVariable.msg += StaticVariable.wordArr[alphindex][alphword][0] + "(字尾：" + GetLastChar(u_word) +") " + StaticVariable.wordArr[alphindex][alphword][1]; //印出單字
    		}else if(!errMsg){
-   			System.out.println("查不到這個單字!!");
+   			StaticVariable.msg += "查不到這個單字!!";
    		}
 	}
 }

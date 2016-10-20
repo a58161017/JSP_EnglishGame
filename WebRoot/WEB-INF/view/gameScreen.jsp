@@ -20,6 +20,7 @@
 	function init(){
 		showMsg();
 		lockOtherPlayer();
+		checkIsExitGame();
 	}
 	
 	function lockOtherPlayer(){
@@ -27,6 +28,7 @@
 		var peopleNum = Number(form.peopleNum.value);
 		for(var i=1; i<=peopleNum; i++){
 			if(i.toString() != leader) document.getElementById('player'+i).disabled = true;
+			else document.getElementById('player'+i).focus();
 		}
 		if(leader == '0'){
 			myTimer1 = setTimeout("computerAction()",timer1);
@@ -62,11 +64,14 @@
 			var gameMode = form.gameMode.value;
 			var leader = form.leader.value;
 			var notifyNextPerson = '';
-			if(gameMode == '1'){
-				if(leader == '0') notifyNextPerson = '這回合輪到電腦~~\n電腦正在思考.'
-				else notifyNextPerson = '這回合輪到玩家1'
-			}else{
-				notifyNextPerson = '這回合輪到玩家'+leader;
+			var isExit = '${gameInfo.isExit}';
+			if(isExit != 'Y'){
+				if(gameMode == '1'){
+					if(leader == '0') notifyNextPerson = '這回合輪到電腦~~\n電腦正在思考.'
+					else notifyNextPerson = '這回合輪到玩家1'
+				}else{
+					notifyNextPerson = '這回合輪到玩家'+leader;
+				}
 			}
 			form.gameMsg.value = '${gameInfo.msg}\n'+notifyNextPerson;
 		}
@@ -81,6 +86,19 @@
 	function computerThink(){
 		form.gameMsg.value = form.gameMsg.value + '.';
 		myTimer2 = setTimeout("computerThink()",timer2);
+	}
+	
+	function checkIsExitGame(){
+		var isExit = '${gameInfo.isExit}';
+		if(isExit == 'Y'){
+			if(confirm('是否重新一局?')){
+				form.action = 'englishGame.do?action=startGame';
+				form.target = '_top';
+				form.submit();
+			}else{
+				top.close();
+			}
+		}
 	}
 </script>
 </head>
@@ -98,6 +116,9 @@
 		<c:forEach var="i" begin="1" end="${gameInfo.peopleNum}">
   			<tr class="tr-2"><td colspan="2">
   				 玩家${i}：<input type="text" id="player${i}" name="player${i}" value="${gameInfo.hisWord[i]}" size="15">
+  				 <c:if test="${gameInfo.gameMode=='2'}">
+  				 	${gameInfo.playersSurrender[i-1]==1?"<font color='red'>已認輸</font>":"<font color='green'>還活著</font>"}
+  				 </c:if>
   				 ${i==1?'&nbsp<input type="submit" value="送出">':''}
   			</td></tr>
 		</c:forEach>

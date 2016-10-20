@@ -4,10 +4,8 @@ public class UserVsCom extends GameModel {
 	void StartGame(){
 		findword = false;	//是否找到單字的變數
 		if(StaticVariable.leader == 1){
-			System.out.println("檢查玩家單字");
 			userPlay();
 		}else{
-			System.out.println("檢查電腦單字");
 		  	CheckWord("noinput");
 		}
 	}
@@ -23,12 +21,12 @@ public class UserVsCom extends GameModel {
 			}
 			return true;
 		}else if(word.equals("\\c")){
-			if(StaticVariable.maxHelp > 0){
+			if(playerHelp > 0){
 				if(CheckHead("noinput") || firstInput)
 					CheckWord("noinput");
 				if(findword){
-					StaticVariable.maxHelp--; //扣掉一次救援次數
-					StaticVariable.msg += "\\n使用救援單字功能，還剩餘"+StaticVariable.maxHelp+"次可以使用~~";
+					playerHelp--; //扣掉一次救援次數
+					StaticVariable.msg += "\\n使用救援單字功能，還剩餘"+playerHelp+"次可以使用~~";
 					if(firstInput) firstInput=false;
 				}
 			}else{
@@ -37,11 +35,11 @@ public class UserVsCom extends GameModel {
 			return true;
 		}else if(word.equals("\\s")){
 			StaticVariable.msg += "已向電腦認輸!!\\n離開對局~~";
-			hasExit = true;
+			StaticVariable.isExit = true;
 			return true;
 		}else if(word.equals("\\e")){
 			StaticVariable.msg += "離開對局~~";
-			hasExit = true;
+			StaticVariable.isExit = true;
 			return true;
 		}else if(word.equals("\\z")){
 			if(StaticVariable.maxComplementWord > 0){
@@ -53,7 +51,7 @@ public class UserVsCom extends GameModel {
 			}
 			return true;
 		}else if(word.substring(0,1).equals("\\")){
-			StaticVariable.msg += "並非正確指令，可使用\\h查看指令";
+			StaticVariable.msg += "並非正確指令!!";
 			return true;
 		}else{
 			return false;

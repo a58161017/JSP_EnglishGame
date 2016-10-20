@@ -6,25 +6,42 @@ public abstract class GameModel{
 	Scanner keyboard = new Scanner(System.in);
 	
 	String u_word,HisWord;	//u_word記錄玩家輸入單字，HisWord紀錄前一個單字
-	boolean hasExit,hasRecord; //指令確認
+	int playerHelp; //救援次數
+	boolean hasRecord; //是否記錄電腦單字
 	boolean firstInput; //是否第一次輸入
 	boolean hasCmd;	//判斷字母是否存在
 	boolean findword, findSimilar; //findword是否找到當前單字，findSimilar是否找到和印象單字match的單字
+	
+	//多人模式其他變數
+	int playersHelp[], playersComplementWord[]; //palyerHelp 記錄各玩家的救援次數,playerComplementWord 記錄各玩家的印象單字次數
 
     GameModel() {
     	set = new Setting();
     }
     
     public void iniGame(){ //初始化資料
-    	firstInput=true; //第一次輸入單字
+    	playerHelp = StaticVariable.maxHelp;
+    	firstInput = true; //第一次輸入單字
     	hasCmd = false;	//判斷字母是否存在
-    	hasExit=false;
-    	hasRecord=false;
+    	hasRecord = false;
+    	StaticVariable.isExit = false;
     	for(int i=0; i<StaticVariable.hisWord.length; i++)
     		StaticVariable.hisWord[i] = "";
     	
+    	//多人模式有其他變數要另外初始化
+    	if(StaticVariable.peopleNum > 1){
+    		StaticVariable.playersSurrender = new int[StaticVariable.peopleNum];
+    		playersHelp = new int[StaticVariable.peopleNum];
+    		playersComplementWord = new int[StaticVariable.peopleNum];
+    		
+    		for(int i=0; i<playersHelp.length; i++){
+    			StaticVariable.playersSurrender[i] = 0;
+    			playersHelp[i] = StaticVariable.maxHelp;
+    			playersComplementWord[i] = StaticVariable.maxComplementWord;
+    		}
+    	}
+    	
     	try{
-    		set.setConfig(); //呼叫Setting的Method匯入外部設定檔
     		set.setWordArray(); //呼叫Setting的Method設定陣列大小
     		set.inputAlph(); //呼叫Setting的Method設定儲存單字至陣列中
     	}catch(Exception e){

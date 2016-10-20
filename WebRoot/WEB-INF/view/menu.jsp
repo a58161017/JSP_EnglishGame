@@ -27,9 +27,21 @@ table, tr, td {
 	window.moveTo(((screen.width - width) / 2), ((screen.height - height) / 2))
 	
 	function setGameMode(mode){
+		var result = true;
 		var peopleNum = 1;
-		var param = 'action=startGame&gameMode='+mode+'&peopleNum='+peopleNum;
-		window.open('englishGame.do?'+param,'英文單字接龍小遊戲',"directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=no,resizable=no,width=800,height=600");
+		var maxUsers = Number('${maxUsers}');
+		if(mode == 2){
+			peopleNum = prompt("請輸入遊戲人數(2-"+maxUsers+"人): ", "2");
+			var regx = /^[0-9]+$/;
+		    if (!regx.test(peopleNum)) {
+		    	alert('請輸入正確的數值!!');
+		    	result = false;
+		    }
+		}
+		if(result){
+			var param = 'action=startGame&gameMode='+mode+'&peopleNum='+peopleNum;
+			window.open('englishGame.do?'+param,'英文單字接龍小遊戲',"directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=no,resizable=no,width=800,height=600");
+		}
 	}
 </script>
 </head>

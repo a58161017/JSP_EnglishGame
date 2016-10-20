@@ -8,6 +8,10 @@ public class EnglishGameImplement {
 		else if("2".equals(mode)) StaticVariable.game = new UserVsUser();
 	}
 	
+	public void setExternalParam(){
+		(new Setting()).setConfig(); //呼叫Setting的Method匯入外部設定檔
+    }
+	
 	public void setGameData(){
 		StaticVariable.game.iniGame(); //初始化遊戲資料
 	}
@@ -43,6 +47,10 @@ public class EnglishGameImplement {
 	}
 	
 	public String[] getHisWord(){
-		return StaticVariable.hisWord;
+		return StaticVariable.hisWord; //回傳所有操作者當前的單字
+	}
+	
+	public int[] getPlayersSurrender(){
+		return StaticVariable.playersSurrender; //回傳所有操作者當前的投降狀態
 	}
 }

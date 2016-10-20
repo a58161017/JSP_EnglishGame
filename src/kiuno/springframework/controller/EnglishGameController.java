@@ -74,12 +74,19 @@ public class EnglishGameController extends MultiActionController {
 		gameImpl.setWord(word);
 		gameImpl.checkAlph(); //檢查使用者輸入的字串
 		
+		if(StaticVariable.isExit){
+			gameImpl.saveRecordToFile();
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("gameMode", gameMode);
 		map.put("peopleNum", String.valueOf(peopleNum));
 		map.put("leader", gameImpl.getLeader());
 		map.put("msg", gameImpl.getMessage());
 		map.put("hisWord", gameImpl.getHisWord());
+		map.put("playersSurrender", gameImpl.getPlayersSurrender()); //多人模式使用
+		map.put("isExit", StaticVariable.isExit?"Y":"N");
+		
 		System.out.println("--------------------執行後--------------------");
 		System.out.println("word = " + StaticVariable.word);
 		System.out.println("leader = " + StaticVariable.leader);
@@ -91,6 +98,7 @@ public class EnglishGameController extends MultiActionController {
 		System.out.println("hisWord[1] = " + StaticVariable.hisWord[1]);
 		System.out.println("msg = " + gameImpl.getMessage());
 		System.out.println("-------------------------------------------");
+		
 		return new ModelAndView(this.getGameScreenPage(),"gameInfo",map);
 	}
 	
