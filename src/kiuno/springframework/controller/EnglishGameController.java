@@ -27,8 +27,6 @@ public class EnglishGameController extends MultiActionController {
 		gameImpl.setPeopleNum(peopleNum); //設定遊戲人數
 		gameImpl.setGameData(); //設定遊戲參數和資料
 		
-		System.out.println("資料設定完成");
-		
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("param", param);
 		map.put("paga", "game.do");
@@ -53,6 +51,7 @@ public class EnglishGameController extends MultiActionController {
 		String gameMode = tp.checkNull(req.getParameter("gameMode"),"1");
 		int peopleNum = Integer.parseInt(tp.checkNull(req.getParameter("peopleNum"),"1"));
 		String leader = tp.checkNull(req.getParameter("leader"),"1"); //if '0'=>computer, '1'=>player1
+		String complementWord = tp.checkNull(req.getParameter("complementWord"),"");
 		String word = "";
 		if("0".equals(leader)){ 
 			word = tp.checkNull(req.getParameter("computer"),"");
@@ -61,22 +60,15 @@ public class EnglishGameController extends MultiActionController {
 			word = tp.checkNull(req.getParameter("player"+leader),"");
 			StaticVariable.msg = "玩家"+leader+":";
 		}
-		System.out.println("--------------------執行前--------------------");
-		System.out.println("gameMode = " + gameMode);
-		System.out.println("peopleNum = " + peopleNum);
-		System.out.println("leader = " + leader);
-		System.out.println("word = " + word);
-		System.out.println("-------------------------------------------");
 		
 		StaticVariable.hisWord[Integer.parseInt(leader)] = word;
 		
 		gameImpl.setLeader(leader);
 		gameImpl.setWord(word);
+		gameImpl.setComplementWord(complementWord);
 		gameImpl.checkAlph(); //檢查使用者輸入的字串
 		
-		if(StaticVariable.isExit){
-			gameImpl.saveRecordToFile();
-		}
+		if(StaticVariable.isExit) gameImpl.saveRecordToFile(); //遊戲對局結束後檢查是否需要記錄單字
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("gameMode", gameMode);
@@ -86,18 +78,6 @@ public class EnglishGameController extends MultiActionController {
 		map.put("hisWord", gameImpl.getHisWord());
 		map.put("playersSurrender", gameImpl.getPlayersSurrender()); //多人模式使用
 		map.put("isExit", StaticVariable.isExit?"Y":"N");
-		
-		System.out.println("--------------------執行後--------------------");
-		System.out.println("word = " + StaticVariable.word);
-		System.out.println("leader = " + StaticVariable.leader);
-		System.out.println("peopleNum = " + StaticVariable.peopleNum);
-		System.out.println("maxHelp = " + StaticVariable.maxHelp);
-		System.out.println("historyWord = " + StaticVariable.historyWord);
-		System.out.println("complementWord = " + StaticVariable.complementWord);
-		System.out.println("hisWord[0] = " + StaticVariable.hisWord[0]);
-		System.out.println("hisWord[1] = " + StaticVariable.hisWord[1]);
-		System.out.println("msg = " + gameImpl.getMessage());
-		System.out.println("-------------------------------------------");
 		
 		return new ModelAndView(this.getGameScreenPage(),"gameInfo",map);
 	}

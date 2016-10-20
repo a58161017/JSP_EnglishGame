@@ -29,6 +29,10 @@ public class EnglishGameImplement {
 		return StaticVariable.msg; //回傳遊戲訊息
 	}
 	
+	public void setComplementWord(String ComplementWord){
+		StaticVariable.playerComplementWord = ComplementWord; //設定使用者輸入印象單字
+	}
+	
 	public void setWord(String word){
 		StaticVariable.word = word; //設定使用者輸入字串
 	}

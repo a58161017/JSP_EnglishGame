@@ -1,6 +1,7 @@
-原始執行環境:
+﻿原始執行環境:
 1. Tomcat 7
 2. jdk1.6/jre6
 3. web檔執行目錄為WebRoot(預設WebContent)
 4. class檔存放目錄WebRoot/WEB-INF/classes(預設build/classes)
 5. 執行http://localhost:8080/JSP_EnglishGame/index.do?action=goHeadIndex進入首頁
+PS:可以透過Index(Chrome).bat或Index(IE).bat來執行

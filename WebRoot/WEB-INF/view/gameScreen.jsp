@@ -39,7 +39,17 @@
 	function validate(){
 		var leader = form.leader.value;
 		var player = document.getElementById('player'+leader);
-		if(player.value != ''){
+		
+		if(player.value == '\\z'){
+			complementWord = prompt("請輸入你有印象的單字(至少5個字):", "");
+			var regx = /^[a-zA-Z]{5,}$/;
+		    if (!regx.test(complementWord)) {
+		    	alert('請輸入正確的數值!!');
+		    	return false;
+		    }else{
+		    	form.complementWord.value = complementWord;
+		    }
+		}else if(player.value != ''){
 			var regx = /^[a-zA-Z\\]+$/;
 		    if (!regx.test(player.value)) {
 		    	alert('只能輸入英文字或指令符號');
@@ -110,6 +120,7 @@
 	<input type="hidden" name="isFirstEntry" value="${gameInfo.isFirstEntry}">
 	<input type="hidden" name="isFirstInput" value="${gameInfo.isFirstInput}">
 	<input type="hidden" name="computer" value="${gameInfo.computer}">
+	<input type="hidden" name="complementWord">
 	
 	<table width="100%">
 		<tr class="tr-1"><td colspan="2" align="center">單人模式</td></tr>

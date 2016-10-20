@@ -1,19 +1,18 @@
 package kiuya.english.game;
-import java.util.Scanner;
 
 public abstract class GameModel{
 	Setting set;
-	Scanner keyboard = new Scanner(System.in);
 	
 	String u_word,HisWord;	//u_word記錄玩家輸入單字，HisWord紀錄前一個單字
-	int playerHelp; //救援次數
 	boolean hasRecord; //是否記錄電腦單字
 	boolean firstInput; //是否第一次輸入
 	boolean hasCmd;	//判斷字母是否存在
 	boolean findword, findSimilar; //findword是否找到當前單字，findSimilar是否找到和印象單字match的單字
 	
+	//單人模式其他變數
+	int playerHelp,playerComplementWord; //palyerHelp 救援次數,playerComplementWord 印象單字次數
 	//多人模式其他變數
-	int playersHelp[], playersComplementWord[]; //palyerHelp 記錄各玩家的救援次數,playerComplementWord 記錄各玩家的印象單字次數
+	int playersHelp[], playersComplementWord[]; //palyersHelp 記錄各玩家的救援次數,playersComplementWord 記錄各玩家的印象單字次數
 
     GameModel() {
     	set = new Setting();
@@ -21,6 +20,7 @@ public abstract class GameModel{
     
     public void iniGame(){ //初始化資料
     	playerHelp = StaticVariable.maxHelp;
+    	playerComplementWord = StaticVariable.maxComplementWord;
     	firstInput = true; //第一次輸入單字
     	hasCmd = false;	//判斷字母是否存在
     	hasRecord = false;
@@ -82,11 +82,9 @@ public abstract class GameModel{
    		if(!hasCmd){
    			if(firstInput){
    				CheckWord(u_word);
-   				if(findword && firstInput)
-					firstInput=false;
+   				if(findword && firstInput) firstInput = false;
    			}else{
-   				if(CheckHead(u_word))
-   					CheckWord(u_word);
+   				if(CheckHead(u_word)) CheckWord(u_word);
    			}
    		}
 	}
@@ -112,10 +110,8 @@ public abstract class GameModel{
    		if(firstInput && u_word.equals("\\c")){
    			alphindex = (int)(Math.random()*StaticVariable.wordArr.length);
    		}else{
-   			if(s1.equals("noinput"))
-   				headword = GetLastChar(HisWord);	//取得上一個單字的字尾，當作這次的字首
-   			else
-   				headword = GetFirstChar(u_word);	//取得輸入單字的字首，當作這次的字首
+   			if(s1.equals("noinput")) headword = GetLastChar(HisWord);	//取得上一個單字的字尾，當作這次的字首
+   			else headword = GetFirstChar(u_word);	//取得輸入單字的字首，當作這次的字首
    		
    			for(int i=0; i<StaticVariable.wordArr.length; i++){	//執行26個字母
    				if(StaticVariable.wordArr[i][0][0].substring(0,1).toLowerCase().equals(headword)){	//判斷目前單字字首為:a~z其中一個
@@ -152,29 +148,22 @@ public abstract class GameModel{
     
     void CheckComplementWord(){
     	findSimilar = false;
-    	String word = keyboard.next();
-    	if(word.length() >= 5){
-    		int alphindex=104;
-    		String headword = GetFirstChar(word);
-    		for(int i=0; i<StaticVariable.wordArr.length; i++){	//執行26個字母
-    			if(StaticVariable.wordArr[i][0][0].substring(0,1).toLowerCase().equals(headword)){	//判斷目前單字字首為:a~z其中一個
-    				alphindex = i;	//紀錄字首的字母索引
-    				break;
-    			}
+    	String word = StaticVariable.playerComplementWord;
+    	int alphindex=0;
+    	String headword = GetFirstChar(word);
+    	for(int i=0; i<StaticVariable.wordArr.length; i++){	//執行26個字母
+    		if(StaticVariable.wordArr[i][0][0].substring(0,1).toLowerCase().equals(headword)){	//判斷目前單字字首為:a~z其中一個
+    			alphindex = i;	//紀錄字首的字母索引
+    			break;
     		}
-    		if(alphindex != 104){
-    			StaticVariable.msg += "搜尋結果如下:\\n";
-    			for(int i=0; i<StaticVariable.wordArr[alphindex].length; i++){
-    				CompareWord(word, alphindex, i);
-    			}
-    			if(!findSimilar)
-    				StaticVariable.msg += "很抱歉沒有類似的單字!!";
-    		}else{
-    			StaticVariable.msg += "輸入單字的字首有問題!!";
-    		}
-    	}else{
-    		StaticVariable.msg += "輸入的印象單字少於5個字!!";
     	}
+
+    	StaticVariable.msg += "搜尋結果如下:\\n";
+    	for(int i=0; i<StaticVariable.wordArr[alphindex].length; i++){
+    		CompareWord(word, alphindex, i);
+    	}
+    	if(!findSimilar) StaticVariable.msg += "很抱歉沒有類似的單字!!";
+
     }
     
     void CompareWord(String word, int x, int y){
@@ -195,7 +184,7 @@ public abstract class GameModel{
     			word = word.substring(1);
     		}
     		if((count == wordTmp.length()) || (count == wordTmp.length()-1)){
-    			StaticVariable.msg += StaticVariable.wordArr[x][y][0];
+    			StaticVariable.msg += StaticVariable.wordArr[x][y][0] + "\\n";
     			findSimilar = true;
     		}
     	}
@@ -221,8 +210,6 @@ public abstract class GameModel{
     
     
     //********************UserVsUser專有方法*******************//
-    //int CheckPeople(); 檢查遊戲人數是否符合範圍                                                          //
-    //void setUser(); 設定每個玩家的基本屬性(例:救援次數、是否投降等)      //
     //void CheckWinner(); 檢查是否有玩家獲勝                                                                  //
     //void nextUser(); 尋找下一位輸入單字的玩家                                                               //
     //******************************************************//

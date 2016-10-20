@@ -1,0 +1,1 @@
+"C:\Program Files (x86)\Fishlose\Application\chrome.exe" "http://localhost:8080/JSP_EnglishGame/index.do?action=goHeadIndex"

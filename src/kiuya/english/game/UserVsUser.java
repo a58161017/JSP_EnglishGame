@@ -12,10 +12,8 @@ public class UserVsUser extends GameModel {
 		int count = 0; //記錄已經投降的玩家數量
 		
 		for(int i=0; i<StaticVariable.peopleNum; i++){
-			if(StaticVariable.playersSurrender[i] == 0)
-				playerWinner = i+1;
-			else
-				count++;
+			if(StaticVariable.playersSurrender[i] == 0) playerWinner = i+1;
+			else count++;
 		}
 		if(count == StaticVariable.peopleNum-1){
 			StaticVariable.msg += "\\n由於其他玩家已認輸，由玩家" + playerWinner + "獲得勝利!!";
@@ -27,19 +25,16 @@ public class UserVsUser extends GameModel {
 	void nextUser(){
 		boolean findPeople = false;
 		while(!findPeople){
-			if(StaticVariable.leader == StaticVariable.peopleNum)
-				StaticVariable.leader = 0;
+			if(StaticVariable.leader == StaticVariable.peopleNum) StaticVariable.leader = 0;
 			StaticVariable.leader++;
-			if(StaticVariable.playersSurrender[StaticVariable.leader-1] != 1)
-				findPeople = true;
+			if(StaticVariable.playersSurrender[StaticVariable.leader-1] != 1) findPeople = true;
 		}
 	}
 
 	boolean CheckCmd(String word){
 		if(word.equals("\\c")){
 			if(playersHelp[StaticVariable.leader-1] > 0){
-				if(CheckHead("noinput") || firstInput)
-					CheckWord("noinput");
+				if(CheckHead("noinput") || firstInput) CheckWord("noinput");
 				if(findword){
 					playersHelp[StaticVariable.leader-1]--; //扣掉一次救援次數
 					StaticVariable.msg += "\\n使用救援單字功能，還剩餘"+playersHelp[StaticVariable.leader-1]+"次可以使用~~";
@@ -60,9 +55,9 @@ public class UserVsUser extends GameModel {
 			return true;
 		}else if(word.equals("\\z")){
 			if(playersComplementWord[StaticVariable.leader-1] > 0){
-				System.out.print("進入到印象單字補充系統!!\\n本回合剩餘可用次數" + playersComplementWord[StaticVariable.leader-1] + "次!!\\n請輸入印象單字(最少5個字以上)：");
-				CheckComplementWord();
 				playersComplementWord[StaticVariable.leader-1]--;
+				StaticVariable.msg += "進入到印象單字補充系統!!\\n本回合剩餘可用次數" + playersComplementWord[StaticVariable.leader-1] + "次!!\\n";
+				CheckComplementWord();
 			}else{
 				StaticVariable.msg += "玩家" + StaticVariable.leader + "的印象單字補充次數已用完!!";
 			}

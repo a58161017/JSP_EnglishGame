@@ -9,6 +9,7 @@ public class StaticVariable {
 	public static String hisWord[] = null; //記錄每一位操作者的當前單字
 	public static boolean isExit = false; //是否離開遊戲
 	public static int playersSurrender[] = null; //記錄投降者(值=0表示尚未認輸，值為1表示已認輸)
+	public static String playerComplementWord = "";
 	public static GameModel game = null; //遊戲模式
 	public static String wordArr[][][]; //所有單字資訊
 	public static int maxUsers, maxHelp, maxComplementWord; //maxUsers=最多參與遊戲人數，maxHelp=最大救援次數，maxComplementWord=最大印象單字補充次數
