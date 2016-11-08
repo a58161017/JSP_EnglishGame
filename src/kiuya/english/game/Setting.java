@@ -136,7 +136,10 @@ public class Setting extends HttpServlet {
     	if(StaticVariable.historyWord){
     		String name = "HistoryWord_" + formatter.format(date) + ".txt"; //以日期當作檔名
     		try{
-            	BufferedWriter bw = new BufferedWriter(new FileWriter(StaticVariable.realPath+"/RecordWord/HistoryWord/" + name));
+    			File dir = new File(StaticVariable.realPath+"/RecordWord/HistoryWord");
+            	if(!dir.exists()) dir.mkdirs();
+            	
+    			BufferedWriter bw = new BufferedWriter(new FileWriter(StaticVariable.realPath+"/RecordWord/HistoryWord/" + name));
             	for(int i=0; i<StaticVariable.wordArr.length; i++){		
             		for(int j=0; j<StaticVariable.wordArr[i].length; j++){
             			if(StaticVariable.wordArr[i][j][2].equals("y")){
@@ -154,7 +157,9 @@ public class Setting extends HttpServlet {
     	if(hasRecord){
     		String name = "ComputerWord_" + formatter.format(date) + ".txt"; //以日期當作檔名
     		try{
-            	BufferedWriter bw = new BufferedWriter(new FileWriter(StaticVariable.realPath+"/RecordWord/ComputerWord/" + name));
+            	File dir = new File(StaticVariable.realPath+"/RecordWord/ComputerWord");
+            	if(!dir.exists()) dir.mkdirs();
+    			BufferedWriter bw = new BufferedWriter(new FileWriter(StaticVariable.realPath+"/RecordWord/ComputerWord/" + name));
             	for(int i=0; i<StaticVariable.wordArr.length; i++){		
             		for(int j=0; j<StaticVariable.wordArr[i].length; j++){
             			if(StaticVariable.wordArr[i][j][3].equals("0")){
