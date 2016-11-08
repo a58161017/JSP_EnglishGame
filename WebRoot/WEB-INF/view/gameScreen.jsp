@@ -27,8 +27,12 @@
 		var leader = form.leader.value;
 		var peopleNum = Number(form.peopleNum.value);
 		for(var i=1; i<=peopleNum; i++){
-			if(i.toString() != leader) document.getElementById('player'+i).disabled = true;
-			else document.getElementById('player'+i).focus();
+			if(i.toString() != leader) {
+				document.getElementById('player'+i).disabled = true;
+			}else {
+				document.getElementById('player'+i).focus();
+				document.getElementById('player'+i).select();
+			}
 		}
 		if(leader == '0'){
 			myTimer1 = setTimeout("computerAction()",timer1);
@@ -55,11 +59,13 @@
 		    	alert('只能輸入英文字或指令符號');
 		    	player.value = '';
 		    	player.focus();
+		    	player.select();
 		    	return false;
 		    }
 		}else{
 			alert('請輸入英文單字或指令符號');
 			player.focus();
+			player.select();
 			return false;
 		}
 	}
